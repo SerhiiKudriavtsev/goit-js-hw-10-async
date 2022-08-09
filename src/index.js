@@ -22,13 +22,21 @@ const refs = {
 
 refs.searchBox.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY));
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
   if (refs.searchBox.value.trim() !== "") {
     const searchQery = refs.searchBox.value.trim();
-    fetchCountries(searchQery)
-      .then(renderCountryCard)
-      .catch(error => Notiflix.Notify.failure('Oops, there is no country with that name'))
+    try {
+      const countriesFound = await fetchCountries(searchQery); 
+    renderCountryCard(countriesFound );
+    } catch (error) {
+      Notiflix.Notify.failure('Oops, there is no country with that name');
+    }
+    
+      // .then(renderCountryCard)
+      // .catch(error =>
+      //   Notiflix.Notify.failure('Oops, there is no country with that name')
+      // );
   }
   else {
     refs.cardConteiner.innerHTML = [];
